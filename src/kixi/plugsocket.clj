@@ -1,9 +1,42 @@
 (ns kixi.plugsocket
   (:import [java.io OutputStream FileOutputStream]
            org.apache.poi.xslf.usermodel.XMLSlideShow
-           java.awt.Dimension))
+           java.awt.Dimension
+           java.awt.Rectangle))
 
-(defn create-powerpoint [{:keys [width height]
+(defn text-box [{:keys [slide text
+                        x y
+                        bold? italic?
+                        font-size
+                        width height]
+                 :or {x false y false
+                      width false
+                      height false
+                      bold? false
+                      italic? false
+                      font-size 30.0}}]
+  (let [box (.createTextBox slide)
+        paragraph (.addNewTextRun (.addNewTextParagraph box))]
+    (cond
+      (every? boolean [x y width height])
+      (.setAnchor box (Rectangle. x y width height))
+      (every? boolean [x y height])
+      (.setAnchor box (Rectangle. x y 500 height))
+      (every? boolean [x y width])
+      (.setAnchor box (Rectangle. x y width 50))
+      (every? boolean [x y])
+      (.setAnchor box (Rectangle. x y 500 50)))
+    (when
+        bold?
+      (.setBold paragraph true))
+    (when
+        italic?
+      (.setItalic paragraph true))
+    (when
+        (double? font-size)
+      (.setFontSize paragraph font-size))
+    (.setText paragraph text)))
+
                           :or {width 1920
                                height 1080}}]
   (let [powerpoint (XMLSlideShow.)]
