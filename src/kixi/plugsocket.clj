@@ -1,10 +1,13 @@
 (ns kixi.plugsocket
   (:import [java.io OutputStream FileOutputStream]
            org.apache.poi.xslf.usermodel.XMLSlideShow
-           ))
+           java.awt.Dimension))
 
-(defn create-powerpoint []
+(defn create-powerpoint [{:keys [width height]
+                          :or {width 1920
+                               height 1080}}]
   (let [powerpoint (XMLSlideShow.)]
+    (.setPageSize powerpoint (Dimension. width height))
     powerpoint))
 
 (defmacro assert-type [value expected-type]
