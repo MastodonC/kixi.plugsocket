@@ -1,8 +1,9 @@
 (ns kixi.plugsocket
-  (:import [java.io OutputStream FileOutputStream]
+  (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File]
            org.apache.poi.xslf.usermodel.XMLSlideShow
            java.awt.Dimension
-           java.awt.Rectangle))
+           java.awt.Rectangle
+           java.net.URL))
 
 (defn text-box [{:keys [slide text
                         x y
@@ -125,3 +126,22 @@
 (defmethod save-powerpoint! String
   [filename powerpoint]
   (save-powerpoint-into-file! filename powerpoint))
+
+(defn url-to-input-stream
+  [^URL string]
+  (BufferedInputStream. (.openStream (URL. string))))
+
+(defn file-to-input-stream
+  [^File string]
+  (FileInputStream. string))
+
+(defmulti image-to-stream!
+  (fn [x _] (class x)))
+
+(defmethod image-to-stream! URL
+  [url]
+  (url-to-input-stream url))
+
+(defmethod image-to-stream! File
+  [file]
+  (file-to-input-stream file))
