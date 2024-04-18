@@ -40,11 +40,13 @@
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
   ;; (text boxes, tables, images) to display on a slide
-  [seq-of-maps powerpoint]
-  (let [slide (.createSlide powerpoint)]
-    (run!
-     #((:slide-fn %) (assoc % :slide slide))
-     seq-of-maps)))
+  ([powerpoint]
+   (.createSlide powerpoint))
+  ([seq-of-maps powerpoint]
+   (let [slide (.createSlide powerpoint)]
+     (run!
+      #((:slide-fn %) (assoc % :slide slide))
+      seq-of-maps))))
 
 (comment
 
@@ -60,6 +62,8 @@
                  :width (- 1920 100)
                  :bold? true
                  :font-size 120.0}]}
+     {:slide-no 3
+      :objects []}
      {:slide-no 1
       :objects [{:slide-fn text-box
                  :text "Hello World!"
