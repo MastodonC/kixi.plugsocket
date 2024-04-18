@@ -3,6 +3,10 @@
            org.apache.poi.xslf.usermodel.XMLSlideShow
            ))
 
+(defn create-powerpoint []
+  (let [powerpoint (XMLSlideShow.)]
+    powerpoint))
+
 (defmacro assert-type [value expected-type]
   `(when-not (isa? (class ~value) ~expected-type)
      (throw (IllegalArgumentException.
@@ -36,7 +40,3 @@
 (defmethod save-powerpoint! String
   [filename powerpoint]
   (save-powerpoint-into-file! filename powerpoint))
-
-(defn create-powerpoint []
-  (let [powerpoint (XMLSlideShow.)]
-    powerpoint))
