@@ -37,10 +37,55 @@
       (.setFontSize paragraph font-size))
     (.setText paragraph text)))
 
+(defn create-slide
+  ;; takes a sequence of maps corresponding to a number of objects
+  ;; (text boxes, tables, images) to display on a slide
+  [seq-of-maps powerpoint]
+  (let [slide (.createSlide powerpoint)]
+    (run!
+     #((:slide-fn %) (assoc % :slide slide))
+     seq-of-maps)))
+
+(comment
+
+  ;; create-slide usage
+  ;; a "slide" is a sequence of maps making up a number of objects
+  ;; (text boxes, tables, images) to display on a slide
+
+  (def slides
+    [{:slide-no 2
+      :objects [{:slide-fn text-box
+                 :text "foo bar"
+                 :x 50 :y 10
+                 :width (- 1920 100)
+                 :bold? true
+                 :font-size 120.0}]}
+     {:slide-no 1
+      :objects [{:slide-fn text-box
+                 :text "Hello World!"
+                 :x 50 :y 10
+                 :width (- 1920 100)
+                 :bold? true
+                 :font-size 120.0}
+                {:slide-fn text-box
+                 :text "First page"
+                 :x 50 :y 330
+                 :bold? true
+                 :font-size 50.0}]}])
+
+  (create-slide (:objects (first (sort-by :slide-no slides))) (XMLSlideShow.))
+
+  )
+
+(defn create-powerpoint [{:keys [width height
+                                 slides]
                           :or {width 1920
                                height 1080}}]
   (let [powerpoint (XMLSlideShow.)]
     (.setPageSize powerpoint (Dimension. width height))
+    (run!
+     #(create-slide (:objects %) powerpoint)
+     (sort-by :slide-no slides))
     powerpoint))
 
 (defmacro assert-type [value expected-type]
