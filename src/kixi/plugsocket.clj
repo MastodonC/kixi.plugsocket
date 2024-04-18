@@ -36,3 +36,7 @@
 (defmethod save-powerpoint! String
   [filename powerpoint]
   (save-powerpoint-into-file! filename powerpoint))
+
+(defn create-powerpoint []
+  (let [powerpoint (XMLSlideShow.)]
+    powerpoint))
