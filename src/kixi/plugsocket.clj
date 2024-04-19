@@ -67,7 +67,7 @@
                 width
                 :else
                 (:width params))
-        in (.addPicture powerpoint (-> params :data IOUtils/toByteArray) PictureData$PictureType/PNG)
+        in (.addPicture powerpoint (IOUtils/toByteArray (image-to-inputstream image)) PictureData$PictureType/PNG)
         out (.createPicture slide in)]
     (.setAnchor out (Rectangle. x y width height))))
 
