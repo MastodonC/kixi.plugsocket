@@ -145,7 +145,6 @@
 (defn save-powerpoint-into-file!
   "Save the workbook into a file."
   [^String filename ^XMLSlideShow powerpoint]
-  (assert-type powerpoint XMLSlideShow)
   (with-open [file-out (FileOutputStream. filename)]
     (.write powerpoint file-out)))
 
