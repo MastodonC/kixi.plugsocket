@@ -58,13 +58,17 @@
                          y 50}}]
   (let [params (image-params image)
         height (cond
+                 (number? height)
                  height
-                 height
+                 (fn? height)
+                 (height (:height params))
                  :else
                  (:height params))
         width (cond
+                (number? width)
                 width
-                width
+                (fn? width)
+                (width (:width params))
                 :else
                 (:width params))
         in (.addPicture powerpoint (IOUtils/toByteArray (image-to-inputstream image)) PictureData$PictureType/PNG)
@@ -98,7 +102,8 @@
        :bold? true
        :font-size 120.0}
       {:slide-fn picture-box
-       :image "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png"}]
+       :image "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png"
+       :height (partial * 4)}]
      []
      [{:slide-fn text-box
        :text "Hello World!"
