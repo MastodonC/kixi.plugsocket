@@ -42,12 +42,9 @@
       (.setFontSize paragraph font-size))
     (.setText paragraph text)))
 
-(defn image-to-inputstream [path]
-  "path can be URL or filepath"
-  (io/input-stream path))
-
 (defn image-params [image]
-  (bean (ImageIO/read (image-to-inputstream image))))
+  (with-open [stream (image-to-inputstream image)]
+    (bean (ImageIO/read stream))))
 
 (defn picture-box [{:keys [slide powerpoint
                            image height
@@ -56,24 +53,25 @@
                          width false
                          x 50
                          y 50}}]
-  (let [params (image-params image)
-        height (cond
-                 (number? height)
-                 height
-                 (fn? height)
-                 (height (:height params))
-                 :else
-                 (:height params))
-        width (cond
-                (number? width)
-                width
-                (fn? width)
-                (width (:width params))
-                :else
-                (:width params))
-        in (.addPicture powerpoint (IOUtils/toByteArray (image-to-inputstream image)) PictureData$PictureType/PNG)
-        out (.createPicture slide in)]
-    (.setAnchor out (Rectangle. x y width height))))
+  (with-open [stream (io/input-stream image)]
+    (let [params (image-params image)
+          height (cond
+                   (number? height)
+                   height
+                   (fn? height)
+                   (height (:height params))
+                   :else
+                   (:height params))
+          width (cond
+                  (number? width)
+                  width
+                  (fn? width)
+                  (width (:width params))
+                  :else
+                  (:width params))
+          in (.addPicture powerpoint (IOUtils/toByteArray stream) PictureData$PictureType/PNG)
+          out (.createPicture slide in)]
+      (.setAnchor out (Rectangle. x y width height)))))
 
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
