@@ -2,6 +2,9 @@
   (:require [clojure.java.io :as io])
   (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File]
            org.apache.poi.xslf.usermodel.XMLSlideShow
+           org.apache.poi.sl.usermodel.PictureData$PictureType
+           org.apache.commons.io.IOUtils
+           javax.imageio.ImageIO
            java.awt.Dimension
            java.awt.Rectangle
            java.net.URL))
@@ -39,6 +42,35 @@
       (.setFontSize paragraph font-size))
     (.setText paragraph text)))
 
+(defn image-to-inputstream [path]
+  "path can be URL or filepath"
+  (io/input-stream path))
+
+(defn image-params [image]
+  (bean (ImageIO/read (image-to-inputstream image))))
+
+(defn picture-box [{:keys [slide powerpoint
+                           image height
+                           width x y]
+                    :or {height false
+                         width false
+                         x 50
+                         y 50}}]
+  (let [params (image-params image)
+        height (cond
+                 height
+                 height
+                 :else
+                 (:height params))
+        width (cond
+                width
+                width
+                :else
+                (:width params))
+        in (.addPicture powerpoint (-> image image-to-inputstream IOUtils/toByteArray) PictureData$PictureType/PNG)
+        out (.createPicture slide in)]
+    (.setAnchor out (Rectangle. x y width height))))
+
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
   ;; (text boxes, tables, images) to display on a slide
@@ -47,7 +79,9 @@
   ([seq-of-maps powerpoint]
    (let [slide (.createSlide powerpoint)]
      (run!
-      #((:slide-fn %) (assoc % :slide slide))
+      #((:slide-fn %) (assoc %
+                             :slide slide
+                             :powerpoint powerpoint))
       seq-of-maps))))
 
 (comment
@@ -62,14 +96,20 @@
        :x 50 :y 10
        :width (- 1920 100)
        :bold? true
-       :font-size 120.0}]
+       :font-size 120.0}
+      {:slide-fn picture-box
+       :image "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png"}]
      []
      [{:slide-fn text-box
        :text "Hello World!"
        :x 50 :y 10
        :width (- 1920 100)
        :bold? true
-       :font-size 120.0}]
+       :font-size 120.0}
+      {:slide-fn picture-box
+       :image "./designation-decision-tree.png"
+       :x 500
+       :y 500}]
      [{:slide-fn text-box
        :text "First page"
        :x 50 :y 330
@@ -117,7 +157,3 @@
 (defmethod save-powerpoint! String
   [filename powerpoint]
   (save-powerpoint-into-file! filename powerpoint))
-
-(defn image-to-inputstream [path]
-  "path can be URL or filepath"
-  (io/input-stream path))
