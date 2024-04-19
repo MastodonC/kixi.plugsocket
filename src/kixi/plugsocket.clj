@@ -43,7 +43,7 @@
     (.setText paragraph text)))
 
 (defn image-params [image]
-  (with-open [stream (image-to-inputstream image)]
+  (with-open [stream (io/input-stream image)]
     (bean (ImageIO/read stream))))
 
 (defn picture-box [{:keys [slide powerpoint
