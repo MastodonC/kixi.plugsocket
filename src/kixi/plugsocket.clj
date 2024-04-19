@@ -56,29 +56,26 @@
   ;; (text boxes, tables, images) to display on a slide
 
   (def slides
-    [{:slide-no 2
-      :objects [{:slide-fn text-box
-                 :text "foo bar"
-                 :x 50 :y 10
-                 :width (- 1920 100)
-                 :bold? true
-                 :font-size 120.0}]}
-     {:slide-no 3
-      :objects []}
-     {:slide-no 1
-      :objects [{:slide-fn text-box
-                 :text "Hello World!"
-                 :x 50 :y 10
-                 :width (- 1920 100)
-                 :bold? true
-                 :font-size 120.0}
-                {:slide-fn text-box
-                 :text "First page"
-                 :x 50 :y 330
-                 :bold? true
-                 :font-size 50.0}]}])
+    [[{:slide-fn text-box
+       :text "foo bar"
+       :x 50 :y 10
+       :width (- 1920 100)
+       :bold? true
+       :font-size 120.0}]
+     []
+     [{:slide-fn text-box
+       :text "Hello World!"
+       :x 50 :y 10
+       :width (- 1920 100)
+       :bold? true
+       :font-size 120.0}]
+     [{:slide-fn text-box
+       :text "First page"
+       :x 50 :y 330
+       :bold? true
+       :font-size 50.0}]])
 
-  (create-slide (:objects (first (sort-by :slide-no slides))) (XMLSlideShow.))
+  (create-slide (vector (first slides)) (XMLSlideShow.))
 
   )
 
@@ -89,8 +86,8 @@
   (let [powerpoint (XMLSlideShow.)]
     (.setPageSize powerpoint (Dimension. width height))
     (run!
-     #(create-slide (:objects %) powerpoint)
-     (sort-by :slide-no slides))
+     #(create-slide % powerpoint)
+     slides)
     powerpoint))
 
 (defmacro assert-type [value expected-type]
