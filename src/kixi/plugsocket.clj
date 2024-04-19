@@ -1,4 +1,5 @@
 (ns kixi.plugsocket
+  (:require [clojure.java.io :as io])
   (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File]
            org.apache.poi.xslf.usermodel.XMLSlideShow
            java.awt.Dimension
@@ -117,21 +118,6 @@
   [filename powerpoint]
   (save-powerpoint-into-file! filename powerpoint))
 
-(defn url-to-input-stream
-  [^URL string]
-  (BufferedInputStream. (.openStream (URL. string))))
-
-(defn file-to-input-stream
-  [^File string]
-  (FileInputStream. string))
-
-(defmulti image-to-stream!
-  (fn [x _] (class x)))
-
-(defmethod image-to-stream! URL
-  [url]
-  (url-to-input-stream url))
-
-(defmethod image-to-stream! File
-  [file]
-  (file-to-input-stream file))
+(defn image-to-inputstream [path]
+  "path can be URL or filepath"
+  (io/input-stream path))
