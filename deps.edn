@@ -1,0 +1,11 @@
+{:paths   ["src"]
+ :deps    {;;org.apache.poi/poi {:mvn/version "5.2.5"}
+           org.apache.poi/poi-ooxml {:mvn/version "5.2.5"}}
+ :aliases {:dev {:extra-paths []
+                 :extra-deps {org.clojure/clojure            {:mvn/version "1.11.1"}
+                              io.github.nextjournal/clerk    {:mvn/version "0.15.957"}
+                              nextjournal/clerk-slideshow    {:git/url    "https://github.com/nextjournal/clerk-slideshow"
+                                                              :git/sha    "f9fb86430ebf533bfc9d5cec5bf0a94ed07146f3"
+                                                              :exclusions [techascent/tech.ml.dataset io.github.nextjournal/clerk]}
+                              techascent/tech.ml.dataset     {:mvn/version "7.021"}
+                              scicloj/tablecloth             {:mvn/version "7.021"}}}}}
