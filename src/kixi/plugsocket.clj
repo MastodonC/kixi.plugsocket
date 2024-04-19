@@ -90,17 +90,10 @@
      slides)
     powerpoint))
 
-(defmacro assert-type [value expected-type]
-  `(when-not (isa? (class ~value) ~expected-type)
-     (throw (IllegalArgumentException.
-             (format "%s is invalid. Expected %s. Actual type %s, value: %s"
-                     (str '~value) ~expected-type (class ~value) ~value)))))
-
 (defn save-powerpoint-into-stream!
   "Save the workbook into a stream.
   The caller is required to close the stream after saving is completed."
   [^OutputStream stream ^XMLSlideShow powerpoint]
-  (assert-type powerpoint XMLSlideShow)
   (.write powerpoint stream))
 
 (defn save-powerpoint-into-file!
