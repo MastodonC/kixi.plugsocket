@@ -53,26 +53,26 @@
                          width false
                          x 50
                          y 50}}]
-  (with-open [stream (io/input-stream image)]
-    (let [bytearray (IOUtils/toByteArray stream)
-          in (.addPicture powerpoint bytearray PictureData$PictureType/PNG)
-          params (image-params bytearray)
-          out (.createPicture slide in)
-          height (cond
-                   (number? height)
-                   height
-                   (fn? height)
-                   (height (:height params))
-                   :else
-                   (:height params))
-          width (cond
-                  (number? width)
-                  width
-                  (fn? width)
-                  (width (:width params))
-                  :else
-                  (:width params))]
-      (.setAnchor out (Rectangle. x y width height)))))
+  (let [bytearray (with-open [stream (io/input-stream image)]
+                    (IOUtils/toByteArray stream))
+        in (.addPicture powerpoint bytearray PictureData$PictureType/PNG)
+        params (image-params bytearray)
+        out (.createPicture slide in)
+        height (cond
+                 (number? height)
+                 height
+                 (fn? height)
+                 (height (:height params))
+                 :else
+                 (:height params))
+        width (cond
+                (number? width)
+                width
+                (fn? width)
+                (width (:width params))
+                :else
+                (:width params))]
+    (.setAnchor out (Rectangle. x y width height))))
 
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
