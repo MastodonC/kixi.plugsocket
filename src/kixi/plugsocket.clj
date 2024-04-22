@@ -1,6 +1,6 @@
 (ns kixi.plugsocket
   (:require [clojure.java.io :as io])
-  (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File]
+  (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File ByteArrayInputStream]
            org.apache.poi.xslf.usermodel.XMLSlideShow
            org.apache.poi.sl.usermodel.PictureData$PictureType
            org.apache.commons.io.IOUtils
@@ -42,8 +42,8 @@
       (.setFontSize paragraph font-size))
     (.setText paragraph text)))
 
-(defn image-params [image]
-  (with-open [stream (io/input-stream image)]
+(defn image-params [bytearray]
+  (with-open [stream (ByteArrayInputStream. bytearray)]
     (bean (ImageIO/read stream))))
 
 (defn picture-box [{:keys [slide powerpoint
@@ -54,7 +54,10 @@
                          x 50
                          y 50}}]
   (with-open [stream (io/input-stream image)]
-    (let [params (image-params image)
+    (let [bytearray (IOUtils/toByteArray stream)
+          in (.addPicture powerpoint bytearray PictureData$PictureType/PNG)
+          params (image-params bytearray)
+          out (.createPicture slide in)
           height (cond
                    (number? height)
                    height
@@ -68,9 +71,7 @@
                   (fn? width)
                   (width (:width params))
                   :else
-                  (:width params))
-          in (.addPicture powerpoint (IOUtils/toByteArray stream) PictureData$PictureType/PNG)
-          out (.createPicture slide in)]
+                  (:width params))]
       (.setAnchor out (Rectangle. x y width height)))))
 
 (defn create-slide
