@@ -14,7 +14,7 @@
                         bold? italic?
                         font-size
                         width height]
-                 :or {x false y false
+                 :or {x 50 y 50
                       width false
                       height false
                       bold? false
@@ -117,6 +117,11 @@
      [{:slide-fn text-box
        :text "First page"
        :x 50 :y 330
+       :bold? true
+       :font-size 50.0}]
+     [{:slide-fn text-box
+       :text "last page"
+       :width 1920
        :bold? true
        :font-size 50.0}]])
 
