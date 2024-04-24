@@ -1,5 +1,6 @@
 (ns kixi.plugsocket
-  (:require [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [kixi.transcode :as trans])
   (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File ByteArrayInputStream]
            org.apache.poi.xslf.usermodel.XMLSlideShow
            org.apache.poi.sl.usermodel.PictureData$PictureType
@@ -74,6 +75,12 @@
                 (:width params))]
     (.setAnchor out (Rectangle. x y width height))))
 
+(defn chart-box [{:keys [vega-lite-chart-map slide powerpoint]}]
+  (let [png-byte-array (trans/vl-map->bytearray vega-lite-chart-map)
+        png (trans/svg-document->png png-byte-array)
+        pd (.addPicture powerpoint png PictureData$PictureType/PNG)]
+    (.createPicture slide pd)))
+
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
   ;; (text boxes, tables, images) to display on a slide
@@ -123,7 +130,21 @@
        :text "last page"
        :width 1920
        :bold? true
-       :font-size 50.0}]])
+       :font-size 50.0}]
+     [{:slide-fn chart-box
+       :vega-lite-chart-map {:data {:values [{:a "A" :b 28}
+                                             {:a "B" :b 55}
+                                             {:a "C" :b 43}
+                                             {:a "D" :b 91}
+                                             {:a "E" :b 81}
+                                             {:a "F" :b 53}
+                                             {:a "G" :b 19}
+                                             {:a "H" :b 87}
+                                             {:a "I" :b 52}]}
+                             :encoding {:x {:axis {:labelAngle 0}
+                                            :field "a" :type "nominal"}
+                                        :y {:field "b" :type "quantitative"}}
+                             :mark "bar"}}]])
 
   (create-slide (vector (first slides)) (XMLSlideShow.))
 
