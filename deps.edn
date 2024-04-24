@@ -1,6 +1,7 @@
 {:paths   ["src"]
  :deps    {;;org.apache.poi/poi {:mvn/version "5.2.5"}
-           org.apache.poi/poi-ooxml {:mvn/version "5.2.5"}}
+           org.apache.poi/poi-ooxml {:mvn/version "5.2.5"}
+           mastodonc/kixi.transcode {:local/root "../kixi.transcode"}}
  :aliases {:dev {:extra-paths []
                  :extra-deps {org.clojure/clojure            {:mvn/version "1.11.1"}
                               io.github.nextjournal/clerk    {:mvn/version "0.15.957"}
