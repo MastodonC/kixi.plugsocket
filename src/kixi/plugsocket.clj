@@ -223,7 +223,7 @@
 
 (comment
 
-  ;; create-slide usage
+  ;; Usage guidance
   ;; a "slide" is a sequence of maps making up a number of objects
   ;; (text boxes, tables, images) to display on a slide
 
@@ -297,10 +297,6 @@
        :y 200}]])
 
   (create-slide (first slides) (XMLSlideShow.))
-
-  (create-slide (last slides) (XMLSlideShow.))
-
-  (create-powerpoint {:slides slides})
 
   (save-powerpoint! "./test.pptx" (create-powerpoint {:slides slides}))
 
