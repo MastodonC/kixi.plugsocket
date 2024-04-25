@@ -3,6 +3,8 @@
             [kixi.transcode :as trans])
   (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File ByteArrayInputStream]
            org.apache.poi.xslf.usermodel.XMLSlideShow
+           org.apache.poi.xslf.usermodel.XSLFPictureShape
+           org.apache.poi.xslf.usermodel.XSLFPictureData
            org.apache.poi.sl.usermodel.PictureData$PictureType
            org.apache.commons.io.IOUtils
            javax.imageio.ImageIO
@@ -78,10 +80,36 @@
                 (:width params))]
     (box-placement out x y width height)))
 
+(defn chart-box [{:keys [vega-lite-chart-map slide
+                         powerpoint height
+                         width x y]
+                  :or {height false
+                       width false
+                       x 50
+                       y 50}}]
   (let [png-byte-array (trans/vl-map->bytearray vega-lite-chart-map)
         png (trans/svg-document->png png-byte-array)
-        pd (.addPicture powerpoint png PictureData$PictureType/PNG)]
-    (.createPicture slide pd)))
+        format-chart (.addPicture powerpoint png PictureData$PictureType/PNG)
+        chart (.createPicture slide format-chart)
+        params (-> chart
+                   .getPictureData
+                   .getImageDimensionInPixels
+                   bean)
+        height (cond
+                 (number? height)
+                 height
+                 (fn? height)
+                 (height (:height params))
+                 :else
+                 (:height params))
+        width (cond
+                (number? width)
+                width
+                (fn? width)
+                (width (:width params))
+                :else
+                (:width params))]
+    (box-placement chart x y width height)))
 
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
