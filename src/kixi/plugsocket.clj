@@ -10,6 +10,17 @@
            java.awt.Rectangle
            java.net.URL))
 
+(defn box-placement [box x y width height]
+  (cond
+    (every? boolean [x y width height])
+    (.setAnchor box (Rectangle. x y width height))
+    (every? boolean [x y height])
+    (.setAnchor box (Rectangle. x y 500 height))
+    (every? boolean [x y width])
+    (.setAnchor box (Rectangle. x y width 50))
+    (every? boolean [x y])
+    (.setAnchor box (Rectangle. x y 500 50))))
+
 (defn text-box [{:keys [slide text
                         x y
                         bold? italic?
@@ -23,15 +34,7 @@
                       font-size 30.0}}]
   (let [box (.createTextBox slide)
         paragraph (.addNewTextRun (.addNewTextParagraph box))]
-    (cond
-      (every? boolean [x y width height])
-      (.setAnchor box (Rectangle. x y width height))
-      (every? boolean [x y height])
-      (.setAnchor box (Rectangle. x y 500 height))
-      (every? boolean [x y width])
-      (.setAnchor box (Rectangle. x y width 50))
-      (every? boolean [x y])
-      (.setAnchor box (Rectangle. x y 500 50)))
+    (box-placement box x y width height)
     (when
         bold?
       (.setBold paragraph true))
@@ -73,9 +76,8 @@
                 (width (:width params))
                 :else
                 (:width params))]
-    (.setAnchor out (Rectangle. x y width height))))
+    (box-placement out x y width height)))
 
-(defn chart-box [{:keys [vega-lite-chart-map slide powerpoint]}]
   (let [png-byte-array (trans/vl-map->bytearray vega-lite-chart-map)
         png (trans/svg-document->png png-byte-array)
         pd (.addPicture powerpoint png PictureData$PictureType/PNG)]
