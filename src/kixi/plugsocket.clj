@@ -96,6 +96,43 @@
                              :powerpoint powerpoint))
       seq-of-maps))))
 
+(defn create-powerpoint [{:keys [width height
+                                 slides]
+                          :or {width 1920
+                               height 1080}}]
+  (let [powerpoint (XMLSlideShow.)]
+    (.setPageSize powerpoint (Dimension. width height))
+    (run!
+     #(create-slide % powerpoint)
+     slides)
+    powerpoint))
+
+(defn save-powerpoint-into-stream!
+  "Save the workbook into a stream.
+  The caller is required to close the stream after saving is completed."
+  [^OutputStream stream ^XMLSlideShow powerpoint]
+  (.write powerpoint stream))
+
+(defn save-powerpoint-into-file!
+  "Save the workbook into a file."
+  [^String filename ^XMLSlideShow powerpoint]
+  (with-open [file-out (FileOutputStream. filename)]
+    (.write powerpoint file-out)))
+
+(defmulti save-powerpoint!
+  "Save the workbook into a stream or a file.
+          In the case of saving into a stream, the caller is required
+          to close the stream after saving is completed."
+  (fn [x _] (class x)))
+
+(defmethod save-powerpoint! OutputStream
+  [stream powerpoint]
+  (save-powerpoint-into-stream! stream powerpoint))
+
+(defmethod save-powerpoint! String
+  [filename powerpoint]
+  (save-powerpoint-into-file! filename powerpoint))
+
 (comment
 
   ;; create-slide usage
@@ -146,45 +183,31 @@
                              :encoding {:x {:axis {:labelAngle 0}
                                             :field "a" :type "nominal"}
                                         :y {:field "b" :type "quantitative"}}
-                             :mark "bar"}}]])
+                             :mark "bar"}}
+      {:slide-fn chart-box
+       :vega-lite-chart-map {:data {:values [{:a "A" :b 28}
+                                             {:a "B" :b 55}
+                                             {:a "C" :b 43}
+                                             {:a "D" :b 91}
+                                             {:a "E" :b 81}
+                                             {:a "F" :b 53}
+                                             {:a "G" :b 19}
+                                             {:a "H" :b 87}
+                                             {:a "I" :b 52}]}
+                             :encoding {:x {:axis {:labelAngle 0}
+                                            :field "a" :type "nominal"}
+                                        :y {:field "b" :type "quantitative"}}
+                             :mark "bar"}
+       :width (partial * 4)
+       :height (partial * 4)
+       :x 300}]])
 
-  (create-slide (vector (first slides)) (XMLSlideShow.))
+  (create-slide (first slides) (XMLSlideShow.))
+
+  (create-slide (last slides) (XMLSlideShow.))
+
+  (create-powerpoint {:slides slides})
+
+  (save-powerpoint! "./test.pptx" (create-powerpoint {:slides slides}))
 
   )
-
-(defn create-powerpoint [{:keys [width height
-                                 slides]
-                          :or {width 1920
-                               height 1080}}]
-  (let [powerpoint (XMLSlideShow.)]
-    (.setPageSize powerpoint (Dimension. width height))
-    (run!
-     #(create-slide % powerpoint)
-     slides)
-    powerpoint))
-
-(defn save-powerpoint-into-stream!
-  "Save the workbook into a stream.
-  The caller is required to close the stream after saving is completed."
-  [^OutputStream stream ^XMLSlideShow powerpoint]
-  (.write powerpoint stream))
-
-(defn save-powerpoint-into-file!
-  "Save the workbook into a file."
-  [^String filename ^XMLSlideShow powerpoint]
-  (with-open [file-out (FileOutputStream. filename)]
-    (.write powerpoint file-out)))
-
-(defmulti save-powerpoint!
-  "Save the workbook into a stream or a file.
-          In the case of saving into a stream, the caller is required
-          to close the stream after saving is completed."
-  (fn [x _] (class x)))
-
-(defmethod save-powerpoint! OutputStream
-  [stream powerpoint]
-  (save-powerpoint-into-stream! stream powerpoint))
-
-(defmethod save-powerpoint! String
-  [filename powerpoint]
-  (save-powerpoint-into-file! filename powerpoint))
