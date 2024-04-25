@@ -1,11 +1,14 @@
 (ns kixi.plugsocket
   (:require [clojure.java.io :as io]
-            [kixi.transcode :as trans])
+            [kixi.transcode :as trans]
+            [tablecloth.api :as tc])
   (:import [java.io OutputStream FileInputStream FileOutputStream BufferedInputStream File ByteArrayInputStream]
            org.apache.poi.xslf.usermodel.XMLSlideShow
            org.apache.poi.xslf.usermodel.XSLFPictureShape
            org.apache.poi.xslf.usermodel.XSLFPictureData
            org.apache.poi.sl.usermodel.PictureData$PictureType
+           org.apache.poi.sl.usermodel.TableCell$BorderEdge
+           org.apache.poi.sl.usermodel.TextParagraph$TextAlign
            org.apache.commons.io.IOUtils
            javax.imageio.ImageIO
            java.awt.Dimension
@@ -110,6 +113,63 @@
                 :else
                 (:width params))]
     (box-placement chart x y width height)))
+
+(defn table-border [{:keys [cell colour color border-size]
+                     :or {colour java.awt.Color/BLACK
+                          color java.awt.Color/BLACK
+                          border-size 2.0}}]
+  (.setBorderWidth cell TableCell$BorderEdge/bottom border-size)
+  (.setBorderColor cell TableCell$BorderEdge/bottom colour)
+  (.setBorderWidth cell TableCell$BorderEdge/top border-size)
+  (.setBorderColor cell TableCell$BorderEdge/top colour)
+  (.setBorderWidth cell TableCell$BorderEdge/left border-size)
+  (.setBorderColor cell TableCell$BorderEdge/left colour)
+  (.setBorderWidth cell TableCell$BorderEdge/right border-size)
+  (.setBorderColor cell TableCell$BorderEdge/right colour))
+
+(defn table-box [{:keys [ds slide x y colWidth
+                         border-colour
+                         border-color
+                         border-size
+                         font-size]
+                  :or {x false
+                       y false
+                       colWidth 200.0
+                       border-colour java.awt.Color/BLACK
+                       border-color java.awt.Color/BLACK
+                       border-size 2.0
+                       font-size 20.0}}]
+  (let [table (.createTable slide)
+        numColumns (tc/column-count ds)
+        numRows (tc/row-count ds)
+        headerRow (.addRow table)
+        ds-header (-> ds tc/column-names vec)]
+    (box-placement table x y false false)
+    (run! (fn [h]
+            (let [th (.addCell headerRow)
+                  p (.addNewTextParagraph th)
+                  r (.addNewTextRun p)]
+              (.setBold r true)
+              (.setTextAlign p TextParagraph$TextAlign/CENTER)
+              (.setText r (name (nth ds-header h)))
+              (.setFontSize r (+ font-size 10.0))
+              (.setColumnWidth table h (double colWidth))
+              (table-border {:cell th :colour border-color
+                             :border-size border-size})))
+          (range 0 numColumns))
+    (run! (fn [rowNum]
+            (let [tr (.addRow table)]
+              (run! (fn [h]
+                      (let [cell (.addCell tr)
+                            p (.addNewTextParagraph cell)
+                            r (.addNewTextRun p)
+                            col-name (nth ds-header h)]
+                        (.setText r (str (nth (ds col-name) rowNum)))
+                        (.setFontSize r font-size)
+                        (table-border {:cell cell :colour border-color
+                                       :border-size border-size})))
+                    (range 0 numColumns))))
+          (range 0 numRows))))
 
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
@@ -228,7 +288,13 @@
                              :mark "bar"}
        :width (partial * 4)
        :height (partial * 4)
-       :x 300}]])
+       :x 300}]
+     [{:slide-fn table-box
+       :ds (tc/dataset [[:A [1 2 3]] [:B ["A" "B" "C"]]])}]
+     [{:slide-fn table-box
+       :ds (tc/dataset [[:A [1 2 3]] [:B ["A" "B" "C"]]])
+       :x 200
+       :y 200}]])
 
   (create-slide (first slides) (XMLSlideShow.))
 
