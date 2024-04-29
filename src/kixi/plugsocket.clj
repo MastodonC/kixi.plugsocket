@@ -171,6 +171,12 @@
                     (range 0 numColumns))))
           (range 0 numRows))))
 
+(def slide-fns
+  {:text-box text-box
+   :chart-box chart-box
+   :picture-box picture-box
+   :table-box table-box})
+
 (defn create-slide
   ;; takes a sequence of maps corresponding to a number of objects
   ;; (text boxes, tables, images) to display on a slide
@@ -179,9 +185,9 @@
   ([seq-of-maps powerpoint]
    (let [slide (.createSlide powerpoint)]
      (run!
-      #((:slide-fn %) (assoc %
-                             :slide slide
-                             :powerpoint powerpoint))
+      #((-> % :slide-fn slide-fns) (assoc %
+                                          :slide slide
+                                          :powerpoint powerpoint))
       seq-of-maps))))
 
 (defn create-powerpoint [{:keys [width height
@@ -228,37 +234,37 @@
   ;; (text boxes, tables, images) to display on a slide
 
   (def presentation
-    [[{:slide-fn text-box
+    [[{:slide-fn :text-box
        :text "foo bar"
        :x 50 :y 10
        :width (- 1920 100)
        :bold? true
        :font-size 120.0}
-      {:slide-fn picture-box
+      {:slide-fn :picture-box
        :image "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png"
        :height (partial * 4)}]
      []
-     [{:slide-fn text-box
+     [{:slide-fn :text-box
        :text "Hello World!"
        :x 50 :y 10
        :width (- 1920 100)
        :bold? true
        :font-size 120.0}
-      {:slide-fn picture-box
+      {:slide-fn :picture-box
        :image "./designation-decision-tree.png"
        :x 500
        :y 500}]
-     [{:slide-fn text-box
+     [{:slide-fn :text-box
        :text "First page"
        :x 50 :y 330
        :bold? true
        :font-size 50.0}]
-     [{:slide-fn text-box
+     [{:slide-fn :text-box
        :text "last page"
        :width 1920
        :bold? true
        :font-size 50.0}]
-     [{:slide-fn chart-box
+     [{:slide-fn :chart-box
        :vega-lite-chart-map {:data {:values [{:a "A" :b 28}
                                              {:a "B" :b 55}
                                              {:a "C" :b 43}
@@ -272,7 +278,7 @@
                                             :field "a" :type "nominal"}
                                         :y {:field "b" :type "quantitative"}}
                              :mark "bar"}}
-      {:slide-fn chart-box
+      {:slide-fn :chart-box
        :vega-lite-chart-map {:data {:values [{:a "A" :b 28}
                                              {:a "B" :b 55}
                                              {:a "C" :b 43}
@@ -289,15 +295,15 @@
        :width (partial * 4)
        :height (partial * 4)
        :x 300}]
-     [{:slide-fn table-box
+     [{:slide-fn :table-box
        :ds (tc/dataset [[:A [1 2 3]] [:B ["A" "B" "C"]]])}]
-     [{:slide-fn table-box
+     [{:slide-fn :table-box
        :ds (tc/dataset [[:A [1 2 3]] [:B ["A" "B" "C"]]])
        :x 200
        :y 200}]])
 
-  (create-slide (first slides) (XMLSlideShow.))
+  (create-slide (first presentation) (XMLSlideShow.))
 
-  (save-powerpoint! "./test.pptx" (create-powerpoint {:slides slides}))
+  (save-powerpoint! "./test.pptx" (create-powerpoint {:slides presentation}))
 
   )
