@@ -22,20 +22,23 @@ Currently there are four types of objects that can be placed on a slide:
 ### Example presentation with two slides
 
 ```
-["a presentation"
+(def presentation
+ ["a presentation"
     ["slide 1"
         {"object 1"
-         :slide-fn text-box
+         :slide-fn :text-box
          :text "foo bar"
          :x 50 :y 10
          :width (- 1920 100)
          :bold? true
          :font-size 120.0}
         {"object 2"
-         :slide-fn picture-box
+         :slide-fn :picture-box
          :image "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png"
          :height (partial * 4)}]
     ["slide 2"
         "an empty slide"]
-]
+])
 ```
+
+Once a sequence of objects and slides has been built this can be passed to `create-powerpoint` which will make a PowerPoint presentation, that can then be further edited or saved to pptx using `save-powerpoint!`.
