@@ -182,15 +182,15 @@
   ;; (text boxes, tables, images) to display on a slide
   ([powerpoint]
    (.createSlide powerpoint))
-  ([seq-of-maps powerpoint]
+  ([slide-def powerpoint]
    (create-slide seq-of-maps slide-fns powerpoint))
-  ([seq-of-maps config powerpoint]
+  ([slide-def config powerpoint]
    (let [slide (.createSlide powerpoint)]
      (run!
       #((-> % :slide-fn config) (assoc %
                                        :slide slide
                                        :powerpoint powerpoint))
-      seq-of-maps))))
+      slide-def))))
 
 (defn create-powerpoint [{:keys [width height
                                  slides config]
