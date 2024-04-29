@@ -41,6 +41,12 @@ Currently there are four types of objects that can be placed on a slide:
 ])
 ```
 
-Once a sequence of objects and slides has been built this can be passed to `create-powerpoint` which will make a PowerPoint presentation, that can then be further edited or saved to pptx using `save-powerpoint!`.
-
 ## Usage
+
+Firstly a sequence of objects and slides should be built (see example above).
+
+All slide functions require, as a minimum, what will be displayed on the slide.
+* For a text box a string
+* For a Vega-Lite chart a standard vega view description map (see [example]("./vega-lite-example.edn"))
+
+this can be passed to `create-powerpoint` which will make a PowerPoint presentation, that can then be further edited or saved to pptx using `save-powerpoint!`.

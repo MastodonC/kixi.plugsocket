@@ -83,9 +83,9 @@
                 (:width params))]
     (box-placement out x y width height)))
 
-(defn chart-box [{:keys [vega-lite-chart-map slide
-                         powerpoint height
-                         width x y]
+(defn chart-box [{:keys [vega-lite-chart-map
+                         powerpoint slide
+                         height width x y]
                   :or {height false
                        width false
                        x 50
