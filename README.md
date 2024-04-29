@@ -14,6 +14,7 @@ A "presentation" is a sequence of vectors each representing a slide.
 Each slide is a vector made up of zero or more maps, each map representing an object on the slide.
 
 Currently there are four types of objects that can be placed on a slide:
+
     * Text box
     * Vega-Lite chart
     * Image
