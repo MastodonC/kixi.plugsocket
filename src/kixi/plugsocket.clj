@@ -227,7 +227,7 @@
   ;; a "slide" is a sequence of maps making up a number of objects
   ;; (text boxes, tables, images) to display on a slide
 
-  (def slides
+  (def presentation
     [[{:slide-fn text-box
        :text "foo bar"
        :x 50 :y 10
