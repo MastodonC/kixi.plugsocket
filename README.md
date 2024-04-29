@@ -43,8 +43,12 @@ Currently there are four types of objects that can be placed on a slide:
 
 Firstly a sequence of objects and slides should be built (see example above).
 
-All slide functions require, as a minimum, what will be displayed on the slide.
+All slide functions accept a map and require, as a minimum, what will be displayed on the slide.
 * For a text box a string
 * For a Vega-Lite chart a standard vega view description map (see [example](./vega-lite-example.edn))
+* For an image a filepath or a URL
+* For a table a [tablecloth](https://github.com/scicloj/tablecloth) dataset
 
-this can be passed to `create-powerpoint` which will make a PowerPoint presentation, that can then be further edited or saved to pptx using `save-powerpoint!`.
+All slide functions can also take `:x` and `:y` parameters for placement of associated box on a slide and most also take `:height` and `:width`. All other parameters have defaults but can be adjusted with additional keys (see [individual "box" functions for options](./src/kixi/plugsocket.clj)).
+
+Your slides can be then passed to `create-powerpoint` which will make a PowerPoint presentation, that can then be further edited or saved to pptx using `save-powerpoint!`.
