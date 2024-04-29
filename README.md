@@ -24,6 +24,12 @@ Currently there are four types of objects that can be placed on a slide.
          :x 50 :y 10
          :width (- 1920 100)
          :bold? true
-         :font-size 120.0}]
-    ["slide 2" {}]
+         :font-size 120.0}
+        {"object 2"
+         :slide-fn picture-box
+         :image "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png"
+         :height (partial * 4)}]
+    ["slide 2"
+        "an empty slide"]
+]
 ```
