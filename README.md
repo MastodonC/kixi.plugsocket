@@ -3,9 +3,7 @@
 
 --- _alpha release_ ---
 
-Plugsocket was created with the idea of being able to create a static version of a [Clerk](https://github.com/nextjournal/clerk) notebook that can be used and edited by non-programmers.
-
-Later versions are planned that will aim to preserve positioning from a Clerk notebook and enable more automated conversion.
+Plugsocket was created due to the need to create a static version of a [Clerk](https://github.com/nextjournal/clerk) notebook that can be used and edited by non-programmers.
 
 ## Concept
 
