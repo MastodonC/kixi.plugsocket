@@ -1,7 +1,7 @@
 # kixi.plugsocket
 ## Convert Clerk notebooks to PPTX slideshows
 
----_alpha release_ ---
+--- _alpha release_ ---
 
 Plugsocket was created with the idea of being able to create a static version of a Clerk notebook that can be used and edited by non-programmers.
 
