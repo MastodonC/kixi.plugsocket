@@ -55,13 +55,13 @@
   (with-open [stream (ByteArrayInputStream. bytearray)]
     (bean (ImageIO/read stream))))
 
-(defn picture-box [{:keys [slide powerpoint
-                           image height
-                           width x y]
-                    :or {height false
-                         width false
-                         x 50
-                         y 50}}]
+(defn image-box [{:keys [slide powerpoint
+                         image height
+                         width x y]
+                  :or {height false
+                       width false
+                       x 50
+                       y 50}}]
   (let [bytearray (with-open [stream (io/input-stream image)]
                     (IOUtils/toByteArray stream))
         in (.addPicture powerpoint bytearray PictureData$PictureType/PNG)
@@ -174,7 +174,7 @@
 (def slide-fns
   {:text-box text-box
    :chart-box chart-box
-   :picture-box picture-box
+   :image-box image-box
    :table-box table-box})
 
 (defn create-slide
@@ -243,7 +243,7 @@
        :width (- 1920 100)
        :bold? true
        :font-size 120.0}
-      {:slide-fn :picture-box
+      {:slide-fn :image-box
        :image "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png"
        :height (partial * 4)}]
      []
@@ -253,7 +253,7 @@
        :width (- 1920 100)
        :bold? true
        :font-size 120.0}
-      {:slide-fn :picture-box
+      {:slide-fn :image-box
        :image "./designation-decision-tree.png"
        :x 500
        :y 500}]
