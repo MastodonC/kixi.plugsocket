@@ -183,21 +183,24 @@
   ([powerpoint]
    (.createSlide powerpoint))
   ([seq-of-maps powerpoint]
+   (create-slide seq-of-maps slide-fns powerpoint))
+  ([seq-of-maps config powerpoint]
    (let [slide (.createSlide powerpoint)]
      (run!
-      #((-> % :slide-fn slide-fns) (assoc %
-                                          :slide slide
-                                          :powerpoint powerpoint))
+      #((-> % :slide-fn config) (assoc %
+                                       :slide slide
+                                       :powerpoint powerpoint))
       seq-of-maps))))
 
 (defn create-powerpoint [{:keys [width height
-                                 slides]
+                                 slides config]
                           :or {width 1920
-                               height 1080}}]
+                               height 1080
+                               config slide-fns}}]
   (let [powerpoint (XMLSlideShow.)]
     (.setPageSize powerpoint (Dimension. width height))
     (run!
-     #(create-slide % powerpoint)
+     #(create-slide % config powerpoint)
      slides)
     powerpoint))
 
