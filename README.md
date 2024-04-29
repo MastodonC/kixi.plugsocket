@@ -16,5 +16,14 @@ Each slide is a vector made up of zero or more maps, each map representing an ob
 Currently there are four types of objects that can be placed on a slide.
 
 ```
-["a presentation"]
+["a presentation"
+    ["slide 1"
+        {"object 1"
+         :slide-fn text-box
+         :text "foo bar"
+         :x 50 :y 10
+         :width (- 1920 100)
+         :bold? true
+         :font-size 120.0}]
+    ["slide 2" {}]
 ```
