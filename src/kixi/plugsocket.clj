@@ -183,7 +183,7 @@
   ([powerpoint]
    (.createSlide powerpoint))
   ([slide-def powerpoint]
-   (create-slide seq-of-maps slide-fns powerpoint))
+   (create-slide slide-def slide-fns powerpoint))
   ([slide-def config powerpoint]
    (let [slide (.createSlide powerpoint)]
      (run!
