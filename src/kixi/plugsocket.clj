@@ -90,9 +90,8 @@
                        width false
                        x 50
                        y 50}}]
-  (let [png-byte-array (trans/vl-map->bytearray vega-lite-chart-map)
-        png (trans/svg-document->png png-byte-array)
-        format-chart (.addPicture powerpoint png PictureData$PictureType/PNG)
+  (let [byte-array (trans/vl-map->bytearray vega-lite-chart-map)
+        format-chart (.addPicture powerpoint byte-array PictureData$PictureType/PNG)
         chart (.createPicture slide format-chart)
         params (-> chart
                    .getPictureData
