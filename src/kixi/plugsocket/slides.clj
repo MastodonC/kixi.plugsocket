@@ -93,7 +93,7 @@
                                       chart
                                       text]
                                :or   {title "Title"
-                                      chart {}
+                                      chart {:mark "bar"}
                                       text ["Point 1"
                                             "Point 2"
                                             "Point 3"]}}]
