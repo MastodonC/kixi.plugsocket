@@ -152,7 +152,7 @@
               (.setBold r true)
               (.setTextAlign p TextParagraph$TextAlign/CENTER)
               (.setText r (name (nth ds-header h)))
-              (.setFontSize r (+ font-size 10.0))
+              (.setFontSize r (+ font-size 5.0))
               (.setColumnWidth table h (double colWidth))
               (table-border {:cell th :colour border-color
                              :border-size border-size})))
