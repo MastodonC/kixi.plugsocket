@@ -45,3 +45,27 @@
     :y 900
     :height (partial * 1.5)
     :width (partial * 1.5)}])
+
+(defn agenda-slide [{:keys [agenda]
+                     :or   {agenda ["Agenda point 1"
+                                    "Agenda point 2"
+                                    "Agenda point 3"]}}]
+  [{:slide-fn :text-box
+    :text "Agenda"
+    :width (- 1920 100)
+    :x 50 :y 200
+    :bold? true
+    :font-size 90.0}
+   {:slide-fn :text-box
+    :text (->> agenda
+               (map #(str "- " %))
+               (clojure.string/join "\n\n"))
+    :width (- 1920 100)
+    :x 50 :y 400
+    :font-size 50.0}
+   {:slide-fn :image-box
+    :image mc-logo-url
+    :x (- 1920 350)
+    :y 900
+    :height (partial * 1.5)
+    :width (partial * 1.5)}])
