@@ -87,3 +87,32 @@
     :y 900
     :height (partial * 1.5)
     :width (partial * 1.5)}])
+
+(defn title-chart-text-slide [{:keys [title
+                                      chart
+                                      text]
+                               :or   {title "Title"
+                                      chart {}
+                                      text ["Point 1"
+                                            "Point 2"
+                                            "Point 3"]}}]
+  [{:slide-fn :text-box
+    :text title
+    :width (- 1920 100)
+    :x 50 :y 100
+    :bold? true
+    :font-size 80.0}
+   {:slide-fn :chart-box
+    :vega-lite-chart-map chart
+    :y 400}
+   {:slide-fn :text-box
+    :text (bulleted-list text)
+    :width 700
+    :x 1200 :y 400
+    :font-size 30.0}
+   {:slide-fn :image-box
+    :image mc-logo-url
+    :x (- 1920 350)
+    :y 900
+    :height (partial * 1.5)
+    :width (partial * 1.5)}])
