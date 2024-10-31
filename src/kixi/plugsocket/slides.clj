@@ -52,18 +52,20 @@
     :height (partial * 1.5)
     :width (partial * 1.5)}])
 
-(defn agenda-slide [{:keys [agenda]
-                     :or   {agenda ["Agenda point 1"
-                                    "Agenda point 2"
-                                    "Agenda point 3"]}}]
+(defn list-slide [{:keys [title
+                          text]
+                   :or   {title "Title"
+                          text ["Point 1"
+                                "Point 2"
+                                "Point 3"]}}]
   [{:slide-fn :text-box
-    :text "Agenda"
+    :text title
     :width (- 1920 100)
     :x 50 :y 200
     :bold? true
     :font-size 90.0}
    {:slide-fn :text-box
-    :text (bulleted-list agenda)
+    :text (bulleted-list text)
     :width (- 1920 100)
     :x 50 :y 400
     :font-size 50.0}
