@@ -1,4 +1,5 @@
-(ns kixi.plugsocket.slides)
+(ns kixi.plugsocket.slides
+  (:require [tablecloth.api :as tc]))
 
 (def mc-logo-url "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png")
 
@@ -110,6 +111,46 @@
     :width 700
     :x 1200 :y 400
     :font-size 30.0}
+   {:slide-fn :image-box
+    :image mc-logo-url
+    :x (- 1920 350)
+    :y 900
+    :height (partial * 1.5)
+    :width (partial * 1.5)}])
+
+(defn title-stacked-charts-table-slide [{:keys [title
+                                                chart-1
+                                                chart-2
+                                                chart-3
+                                                ds]
+                                         :or   {title "Title"
+                                                chart-1 {:mark "bar"}
+                                                chart-2 {:mark "bar"}
+                                                chart-3 {:mark "bar"}
+                                                ds (tc/dataset)}}]
+  [{:slide-fn :text-box
+    :text title
+    :width (- 1920 100)
+    :x 50 :y 100
+    :bold? true
+    :font-size 50.0}
+   {:slide-fn :chart-box
+    :vega-lite-chart-map chart-1
+    :y 300}
+   {:slide-fn :chart-box
+    :vega-lite-chart-map chart-2
+    :y 500}
+   {:slide-fn :chart-box
+    :vega-lite-chart-map chart-3
+    :y 700}
+   {:slide-fn :text-box
+    :text (tc/dataset-name ds)
+    :x 1270
+    :y 300}
+   {:slide-fn :table-box
+    :ds ds
+    :x 1300
+    :y 370}
    {:slide-fn :image-box
     :image mc-logo-url
     :x (- 1920 350)
