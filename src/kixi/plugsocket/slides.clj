@@ -2,6 +2,11 @@
 
 (def mc-logo-url "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png")
 
+(defn bulleted-list [seq-of-text]
+  (->> seq-of-text
+       (map #(str "- " %))
+       (clojure.string/join "\n\n")))
+
 (defn title-slide [{:keys [presentation-title
                            work-package
                            presentation-date
@@ -57,9 +62,7 @@
     :bold? true
     :font-size 90.0}
    {:slide-fn :text-box
-    :text (->> agenda
-               (map #(str "- " %))
-               (clojure.string/join "\n\n"))
+    :text (bulleted-list agenda)
     :width (- 1920 100)
     :x 50 :y 400
     :font-size 50.0}
