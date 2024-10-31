@@ -2,14 +2,14 @@
 
 (def mc-logo-url "https://www.mastodonc.com/wp-content/themes/MastodonC-2018/dist/images/logo_mastodonc.png")
 
-(defn title-page [{:keys [presentation-title
-                          work-package
-                          presentation-date
-                          client-name]
-                   :or   {presentation-title ""
-                          work-package ""
-                          presentation-date ""
-                          client-name ""}}]
+(defn title-slide [{:keys [presentation-title
+                           work-package
+                           presentation-date
+                           client-name]
+                    :or   {presentation-title ""
+                           work-package ""
+                           presentation-date ""
+                           client-name ""}}]
   [{:slide-fn :text-box
     :text presentation-title
     :x 50 :y 10
