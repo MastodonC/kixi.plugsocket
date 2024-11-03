@@ -192,3 +192,30 @@
     :y 900
     :height (partial * 1.5)
     :width (partial * 1.5)}])
+
+(defn title-stacked-charts-slide [{:keys [title
+                                          chart-1
+                                          chart-2]
+                                   :or   {title "Title"
+                                          chart-1 {:mark "bar"}
+                                          chart-2 {:mark "bar"}}}]
+  [{:slide-fn :text-box
+    :text title
+    :width (- 1920 100)
+    :x 50 :y 100
+    :bold? true
+    :font-size 50.0}
+   {:slide-fn :chart-box
+    :vega-lite-chart-map chart-1
+    :x 70
+    :y 300}
+   {:slide-fn :chart-box
+    :vega-lite-chart-map chart-2
+    :x 50
+    :y 600}
+   {:slide-fn :image-box
+    :image mc-logo-url
+    :x (- 1920 350)
+    :y 900
+    :height (partial * 1.5)
+    :width (partial * 1.5)}])
