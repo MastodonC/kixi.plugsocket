@@ -142,7 +142,8 @@
         numColumns (tc/column-count ds)
         numRows (tc/row-count ds)
         headerRow (.addRow table)
-        ds-header (-> ds tc/column-names vec)]
+        ds-header (-> ds tc/column-names vec)
+        font-size (double font-size)]
     (box-placement table x y false false)
     (run! (fn [h]
             (let [th (.addCell headerRow)
@@ -151,7 +152,7 @@
               (.setBold r true)
               (.setTextAlign p TextParagraph$TextAlign/CENTER)
               (.setText r (name (nth ds-header h)))
-              (.setFontSize r (+ font-size 10.0))
+              (.setFontSize r (+ font-size 5.0))
               (.setColumnWidth table h (double colWidth))
               (table-border {:cell th :colour border-color
                              :border-size border-size})))
