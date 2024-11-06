@@ -91,6 +91,26 @@
     :height (partial * 1.5)
     :width (partial * 1.5)}])
 
+(defn title-chart-slide [{:keys [title
+                                 chart]
+                          :or   {title "Title"
+                                 chart {:mark "bar"}}}]
+  [{:slide-fn :text-box
+    :text title
+    :width (- 1920 100)
+    :x 50 :y 100
+    :bold? true
+    :font-size 80.0}
+   {:slide-fn :chart-box
+    :vega-lite-chart-map chart
+    :y 400}
+   {:slide-fn :image-box
+    :image mc-logo-url
+    :x (- 1920 350)
+    :y 900
+    :height (partial * 1.5)
+    :width (partial * 1.5)}])
+
 (defn title-chart-text-slide [{:keys [title
                                       chart
                                       text]
@@ -120,99 +140,25 @@
     :height (partial * 1.5)
     :width (partial * 1.5)}])
 
-(defn title-stacked-charts-table-slide [{:keys [title
-                                                chart-1
-                                                chart-2
-                                                chart-3
-                                                ds]
-                                         :or   {title "Title"
-                                                chart-1 {:mark "bar"}
-                                                chart-2 {:mark "bar"}
-                                                chart-3 {:mark "bar"}
-                                                ds (tc/dataset)}}]
+(defn title-chart-table-slide [{:keys [title
+                                       chart
+                                       ds]
+                                :or   {title "Title"
+                                       chart {:mark "bar"}
+                                       ds (tc/dataset)}}]
   [{:slide-fn :text-box
     :text title
     :width (- 1920 100)
     :x 50 :y 100
     :bold? true
-    :font-size 50.0}
+    :font-size 70.0}
    {:slide-fn :chart-box
-    :vega-lite-chart-map chart-1
-    :y 300}
-   {:slide-fn :chart-box
-    :vega-lite-chart-map chart-2
-    :y 500}
-   {:slide-fn :chart-box
-    :vega-lite-chart-map chart-3
-    :y 700}
-   {:slide-fn :text-box
-    :text (tc/dataset-name ds)
-    :x 1270
-    :y 300}
+    :vega-lite-chart-map chart
+    :y 400}
    {:slide-fn :table-box
     :ds ds
     :x 1300
     :y 370}
-   {:slide-fn :image-box
-    :image mc-logo-url
-    :x (- 1920 350)
-    :y 900
-    :height (partial * 1.5)
-    :width (partial * 1.5)}])
-
-(defn title-stacked-charts-text-slide [{:keys [title
-                                               chart-1
-                                               chart-2
-                                               text]
-                                        :or   {title "Title"
-                                               chart-1 {:mark "bar"}
-                                               chart-2 {:mark "bar"}
-                                               text ["Point 1"]}}]
-  [{:slide-fn :text-box
-    :text title
-    :width (- 1920 100)
-    :x 50 :y 100
-    :bold? true
-    :font-size 50.0}
-   {:slide-fn :chart-box
-    :vega-lite-chart-map chart-1
-    :x 70
-    :y 300}
-   {:slide-fn :chart-box
-    :vega-lite-chart-map chart-2
-    :x 50
-    :y 600}
-   {:slide-fn :text-box
-    :text (bulleted-list text)
-    :x 1270
-    :y 300}
-   {:slide-fn :image-box
-    :image mc-logo-url
-    :x (- 1920 350)
-    :y 900
-    :height (partial * 1.5)
-    :width (partial * 1.5)}])
-
-(defn title-stacked-charts-slide [{:keys [title
-                                          chart-1
-                                          chart-2]
-                                   :or   {title "Title"
-                                          chart-1 {:mark "bar"}
-                                          chart-2 {:mark "bar"}}}]
-  [{:slide-fn :text-box
-    :text title
-    :width (- 1920 100)
-    :x 50 :y 100
-    :bold? true
-    :font-size 50.0}
-   {:slide-fn :chart-box
-    :vega-lite-chart-map chart-1
-    :x 70
-    :y 300}
-   {:slide-fn :chart-box
-    :vega-lite-chart-map chart-2
-    :x 50
-    :y 600}
    {:slide-fn :image-box
     :image mc-logo-url
     :x (- 1920 350)
