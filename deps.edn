@@ -1,9 +1,9 @@
 {:paths   ["src"]
  :deps    {;;org.apache.poi/poi {:mvn/version "5.2.5"}
-           org.apache.poi/poi-ooxml {:mvn/version "5.2.5"}
+           org.apache.poi/poi-ooxml {:mvn/version "5.3.0"}
            mastodonc/kixi.transcode {:git/url    "https://github.com/MastodonC/kixi.transcode"
                                      :git/sha    "87cf6f34451de5bbd24ea184e577e1f9a1ba8846"}
-           scicloj/tablecloth       {:mvn/version "7.021"}}
+           scicloj/tablecloth       {:mvn/version "7.029.2"}}
  :aliases {:dev {:extra-paths []
                  :extra-deps {org.clojure/clojure            {:mvn/version "1.11.1"}
                               io.github.nextjournal/clerk    {:mvn/version "0.15.957"}
